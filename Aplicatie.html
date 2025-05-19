@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicație Grafuri Orientate</title>
+    <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="darklight.css">
+</head>
+
+
+<body>
+
+    <header class="header">
+        <div class="navbar">
+            <img src="ChatGPT_Image_May_3_2025_08_51_06_PM.png" alt="logo" class="logo">
+            <nav>
+                <a href="index.html">Introducere</a>
+                <a href="Teorie.html">Teorie</a>
+                <a href="Algoritmi.html">Algoritmi</a>
+                <a href="Aplicatie.html">Aplicații</a>
+                <div class="container-mode">
+                    <div class="toggle-switch" id="theme-toggle">
+                        <div class="icon sun">☀️</div>
+                        <div class="icon moon">🌑</div>
+                        <div class="circle"></div>
+                    </div>
+            </nav>
+        </div>
+
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Aplicație Grafuri Orientate</h1>
+        <p>Click pe canvas pentru a adăuga noduri și muchii orientate.</p>
+
+        <div id="controls">
+            <button onclick="adaugaMuchie()" class="buton-graf">Adaugă Arc</button>
+            <button onclick="reseteazaGraf()" class="buton-graf">Resetează Graf</button>
+        </div>
+
+        <canvas id="graphCanvas" width="800" height="600" ></canvas>
+
+        <script>
+            let noduri = [];
+            let muchii = [];
+            let idNod = 0;
+
+            const canvas = document.getElementById('graphCanvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                noduri.push({ id: idNod++, x, y });
+                deseneazaGraf();
+            });
+
+            function deseneazaGraf() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let muchie of muchii) {
+                    ctx.beginPath();
+                    ctx.moveTo(muchie.from.x, muchie.from.y);
+                    ctx.lineTo(muchie.to.x, muchie.to.y);
+                    ctx.stroke();
+
+                    const dx = muchie.to.x - muchie.from.x;
+                    const dy = muchie.to.y - muchie.from.y;
+                    const lungime = Math.sqrt(dx * dx + dy * dy);
+                    const ux = dx / lungime;
+                    const uy = dy / lungime;
+
+                    ctx.beginPath();
+                    ctx.fillStyle = "#FFD700"
+                    ctx.moveTo(muchie.to.x, muchie.to.y);
+                    ctx.lineTo(muchie.to.x - 10 * ux - 5 * uy, muchie.to.y - 10 * uy + 5 * ux);
+                    ctx.lineTo(muchie.to.x - 10 * ux + 5 * uy, muchie.to.y - 10 * uy - 5 * ux);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
+                for (let nod of noduri) {
+                    ctx.beginPath();
+                    ctx.arc(nod.x, nod.y, 20, 0, 2 * Math.PI);
+                    ctx.fillStyle = "#FFD700";
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.fillStyle = "black";
+                    ctx.font = "13px Arial";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(nod.id, nod.x, nod.y);
+                }
+            }
+
+            function adaugaMuchie() {
+                if (noduri.length < 2) {
+                    alert("Adaugă mai întâi noduri!");
+                    return;
+                }
+                const deLa = prompt("ID nod start:");
+                const catre = prompt("ID nod destinație:");
+                const nodStart = noduri.find(n => n.id == deLa);
+                const nodEnd = noduri.find(n => n.id == catre);
+
+                if (nodStart && nodEnd) {
+                    muchii.push({ from: nodStart, to: nodEnd });
+                    deseneazaGraf();
+                } else {
+                    alert("ID-uri incorecte!");
+                }
+            }
+
+            function reseteazaGraf() {
+                if (confirm("Sigur vrei să ștergi graf-ul?")) {
+                    noduri = [];
+                    muchii = [];
+                    idNod = 0;
+                    deseneazaGraf();
+                }
+            }
+        </script>
+
+        <section>
+            <h2>Problema 1</h2>
+            <h3>Cerința</h3>
+            <p>Se dă lista arcelor unui graf orientat. Să se determine nodurile care au gradul exterior egal cu gradul interior.</p>
+            <h3>Date de intrare</h3>
+            <p>Programul citește de la tastatură numărul n de noduri și numărul m de arce, iar apoi lista arcelor, formată din m perechi de forma i j, cu semnificația că există arc orientat de la i la j.</p>
+            <h3>Date de ieșire</h3>
+            <p>Programul va afișa pe ecran numărul C, reprezentând numărul de noduri care au gradul interior egal cu cel exterior, iar pe linie următoare afișează aceste noduri, ordonate crescător, separate prin exact un spațiu.</p>
+            <img src="Screenshot 2025-05-18 220858.png" alt="rezolvare" class="rezolvare">
+        </section>
+
+        <section>
+            <h2>Problema 2</h2>
+            <h3>Cerința</h3>
+            <p>Se dă lista arcelor unui graf orientat. Să se determine nodurile care au gradul exterior mai mic decât gradul interior.</p>
+            <h3>Date de intrare</h3>
+            <p>Programul citește de la tastatură numărul n de noduri și numărul m de arce, iar apoi lista arcelor, formată din m perechi de forma i j, cu semnificația că există arc orientat de la i la j.</p>
+            <h3>Date de ieșire</h3>
+            <p>Programul va afișa pe ecran numărul C, reprezentând numărul de noduri care au gradul exterior mai mic decât cel interior, iar pe linie următoare afișează aceste noduri, ordonate crescător, separate prin exact un spațiu.</p>
+            <img src="Screenshot 2025-05-18 222403.png" alt="rezolvare" class="rezolvare">
+        </section>
+
+    </main>
+
+    <footer class="idk">
+        <p>&copy; 2025 Proiect Școlar - Grafuri Orientate</p>
+    </footer>
+    
+    <script src="darklight.js"></script>
+
+</body>
+
+</html>

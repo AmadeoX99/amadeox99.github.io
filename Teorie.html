@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teorie - Grafuri Orientate</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darklight.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="navbar">
+            <img src="ChatGPT_Image_May_3_2025_08_51_06_PM.png" alt="logo" class="logo">
+            <nav>
+                <a href="index.html">Introducere</a>
+                <a href="Teorie.html">Teorie</a>
+                <a href="Algoritmi.html">Algoritmi</a>
+                <a href="Aplicatie.html">Aplicații</a>
+                <div class="container-mode">
+                    <div class="toggle-switch" id="theme-toggle">
+                        <div class="icon sun">☀️</div>
+                        <div class="icon moon">🌑</div>
+                        <div class="circle"></div>
+                    </div>
+            </nav>
+        </div>
+
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Teorie - Grafuri Orientate</h1>
+
+        <section>
+            <div class="image-text">
+                <div class="text-box">
+                    <p>Un <strong>graf orientat</strong> este un tip de graf în care muchiile au o direcție specifică.
+                        Aceste muchii se numesc <strong>arce</strong> și sunt reprezentate de săgeți de la un nod sursă
+                        către un
+                        nod destinație.</p>
+                </div>
+                <img src="avioane.jpg" alt="Exemplu graf orientat" width="250">
+            </div>
+
+        </section>
+
+        <section>
+            <h2>Definiție</h2>
+
+            <div class="image-text">
+                <div class="text-box">
+                    <p>Un graf orientat (sau digraf) este o pereche ordonată <strong>G = (V, A)</strong> unde:</p>
+                    <ul>
+                        <li><strong>V</strong> este o mulțime de vârfuri (noduri);</li>
+                        <li><strong>A</strong> este o mulțime de arce (muchii orientate), fiecare arc fiind un cuplu
+                            ordonat de
+                            noduri (u, v).</li>
+                    </ul>
+                </div>
+                <img src="graf-orientat.png" alt="Exemplu graf " id="img-definitie">
+            </div>
+        </section>
+
+        <section>
+            <h2>Reprezentare Grafică</h2>
+            <p>În reprezentare grafică:</p>
+            <div class="image-text">
+                <div class="text-box">
+                    <ul>
+                        <li>Fiecare nod este un cerc sau o bulină.</li>
+                        <li>Fiecare arc este o săgeată orientată de la un nod la altul.</li>
+                    </ul>
+                </div>
+                <img src="graf-orientat.svg" alt="Exemplu graf orientat" width="250" id="graf">
+            </div>
+        </section>
+
+        <section>
+            <h2>Tipuri de Grafuri Orientate</h2>
+            <div class="image-text">
+                <div class="text-box">
+                    <ul>
+                        <li><strong>Graf orientat simplu:</strong> fără muchii multiple între aceleași noduri și fără
+                            bucle (muchii de la un nod la el însuși).</li>
+                        <li><strong>Graf orientat ponderat:</strong> fiecare muchie are asociată o greutate (cost).</li>
+                        <li><strong>Graf orientat aciclic (DAG):</strong> nu există cicluri orientate.</li>
+                        <li><strong>Graf orientat tare conex:</strong> există un drum orientat între oricare două
+                            noduri.</li>
+                        <li><strong>Graf orientat slab conex:</strong> ignorând orientarea muchiilor, graful este conex.
+                        </li>
+                    </ul>
+                </div>
+                <img src="Directed_acyclic_graph_2.svg.png" alt="Exemplu graf aciclic" width="250">
+            </div>
+        </section>
+
+        <section>
+            <h2>Reprezentări Matematice</h2>
+
+            <h3>1. Matricea de Adiacență</h3>
+            <ul>
+                <li>Matrice pătratică<strong> n x n</strong>, unde <strong>n=∣V∣</strong>,</li>
+                <li>Elementul <strong>𝑎[𝑖][𝑗] = 1</strong> dacă există o muchie de la nodul <strong>i</strong> la
+                    nodul <strong>j</strong>, altfel 0,</li>
+                <li>Pentru grafuri ponderate, elementul poate conține costul/arcul de la <strong>i</strong> la
+                    <strong>j</strong>.
+                </li>
+            </ul>
+
+            <h3>2. Lista de Adiacență</h3>
+            <ul>
+                <li>Un vector/listă de <strong>n</strong> elemente,</li>
+                <li>Fiecare element reprezintă lista vecinilor direcționați către care există o muchie pornind din nodul
+                    respectiv,</li>
+                <li>Este mai eficientă pentru grafuri rare (cu puține muchii).</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Proprietăți importante</h2>
+            <ul>
+                <li><strong>Gradul intern</strong> (in-degree): al unui nod <strong>𝑣</strong>: numărul muchiilor care
+                    intră în <strong>𝑣</strong> .</li>
+                <li><strong>Gradul extern</strong> (out-degree): al unui nod <strong>𝑣</strong>: numărul muchiilor care
+                    ies din <strong>𝑣</strong> .</li>
+                <p>Pentru grafuri neorientate, gradul unui nod este numărul total de muchii care îl ating, dar la
+                    grafuri orientate se fac distincții între grad intern și extern.</p>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Parcurgeri</h2>
+            <h3>1. Parcurgerea în adâncime (DFS - Depth First Search)</h3>
+            <ul>
+                <p>Vizitează nodurile cât mai adânc posibil pe un drum. Este folosită pentru:</p>
+                <li>Detectarea ciclurilor.</li>
+                <li>Ordinea topologică.</li>
+                <li>Detectarea componentelor puternic conexe (algoritmul lui Tarjan sau Kosaraju).</li>
+            </ul>
+            <h3>2. Parcurgerea în lățime (BFS - Breadth First Search)</h3>
+            <ul>
+                <p>Vizitează toate nodurile la același nivel înainte de a trece la nivelul următor.</p>
+                <li>Este folosită pentru găsirea celui mai scurt drum în grafuri neponderate.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Exemplu simplu</h2>
+            <div class="image-text">
+                <div class="text-box">
+                    <p>Considerăm graf-ul:</p>
+                    <ul>
+                        <li>V = {A, B, C}</li>
+                        <li>A = {(A, B), (B, C), (C,A), (C,B)}</li>
+                    </ul>
+                    <p>Interpretare: există un arc de la A la B, de la B la C, de la C la A si de la C la B.</p>
+                </div>
+                <img src="Directed.svg (1).png" alt="Graf simplu orientat" width="300">
+            </div>
+        </section>
+
+
+        <section>
+            <h2>Concluzie</h2>
+            <p>Grafurile orientate sunt instrumente esențiale pentru modelarea relațiilor unidirecționale în multiple
+                domenii practice și teoretice.</p>
+            <p>În continuare, puteți explora un exemplu interactiv de graf orientat pe tab-ul
+                <a href="Algoritmi.html">Algoritmi!</a>
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="idk">
+        <p>&copy; 2025 Proiect Școlar - Grafuri Orientate</p>
+    </footer>
+
+    <script src="darklight.js"></script>
+
+</body>
+
+</html>

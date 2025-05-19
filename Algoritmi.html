@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Vizualizator de Grafuri Simplu</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.2/standalone/umd/vis-network.min.js"></script>
+    <link rel="stylesheet" href="algoritmi.css">
+    <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="darklight.css">
+
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="navbar">
+            <img src="ChatGPT_Image_May_3_2025_08_51_06_PM.png" alt="logo" class="logo">
+            <nav>
+                <a href="index.html">Introducere</a>
+                <a href="Teorie.html">Teorie</a>
+                <a href="Algoritmi.html">Algoritmi</a>
+                <a href="Aplicatie.html">Aplicații</a>
+                <div class="container-mode">
+                    <div class="toggle-switch" id="theme-toggle">
+                        <div class="icon sun">☀️</div>
+                        <div class="icon moon">🌑</div>
+                        <div class="circle"></div>
+                    </div>
+            </nav>
+        </div>
+
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Vizualizator Interactiv de Grafuri</h1>
+
+        <input type="text" id="node-id" placeholder="ID Nod" />
+        <button onclick="addNode()">Adaugă Nod</button>
+
+        <input type="text" id="from" placeholder="De la" />
+        <input type="text" id="to" placeholder="La" />
+        <button onclick="addEdge()">Adaugă Arc</button>
+
+        <select id="algo">
+            <option value="bfs">BFS</option>
+            <option value="dfs">DFS</option>
+        </select>
+        <button onclick="runAlgorithm()">Rulează Algoritm</button>
+
+        <button onclick="resetGraph()">Resetează Graful</button>
+
+        <label>
+            <input type="checkbox" id="directed" checked onchange="toggleDirection()" />
+            Graf Orientat
+        </label>
+
+
+
+        <div id="graph-container"></div>
+
+        <script>
+            let nodes = new vis.DataSet();
+            let edges = new vis.DataSet();
+            let directed = true;
+
+            const container = document.getElementById("graph-container");
+
+            let options = {
+                nodes: {
+                    color: {
+                        background: '#FFC107',
+                        border: '#333',
+                        highlight: {
+                            background: '#FFD54F',
+                            border: '#000'
+                        }
+                    },
+                    font: {
+                        color: '#000',
+                        size: 16,
+                        bold: true
+                    },
+                    shape: "circle"
+                },
+                edges: {
+                    arrows: {
+                        to: { enabled: true, scaleFactor: 0.5 }
+                    }
+                },
+                physics: false
+            };
+
+
+            let network = new vis.Network(container, { nodes, edges }, options);
+
+            function addNode() {
+                const id = document.getElementById("node-id").value.trim();
+                if (!id) {
+                    alert("Introdu un ID valid pentru nod!");
+                    return;
+                }
+                if (nodes.get(id)) {
+                    alert("Nodul există deja!");
+                    return;
+                }
+                nodes.add({ id: id, label: id });
+                document.getElementById("node-id").value = "";
+            }
+
+            function addEdge() {
+                const from = document.getElementById("from").value.trim();
+                const to = document.getElementById("to").value.trim();
+
+                if (!from || !to) {
+                    alert("Completează ambele câmpuri De la și La!");
+                    return;
+                }
+                if (!nodes.get(from) || !nodes.get(to)) {
+                    alert("Nodurile specificate trebuie să existe!");
+                    return;
+                }
+
+                // Previne dublarea muchiilor
+                const existing = edges.get({
+                    filter: e => e.from === from && e.to === to
+                });
+                if (existing.length > 0) {
+                    alert("Arc deja există!");
+                    return;
+                }
+
+                edges.add({ from, to });
+                document.getElementById("from").value = "";
+                document.getElementById("to").value = "";
+            }
+
+            function resetGraph() {
+                nodes.clear();
+                edges.clear();
+            }
+
+
+
+            function toggleDirection() {
+                directed = document.getElementById("directed").checked;
+                options.edges.arrows.to.enabled = directed;
+                network.setOptions(options);
+            }
+
+            async function runAlgorithm() {
+                if (nodes.length === 0) {
+                    alert("Adaugă mai întâi noduri!");
+                    return;
+                }
+                const algo = document.getElementById("algo").value;
+                const visited = {};
+                const adj = {};
+
+                // Construiește lista de adiacență
+                nodes.forEach(n => adj[n.id] = []);
+                edges.forEach(e => {
+                    adj[e.from].push(e.to);
+                    if (!directed) {
+                        adj[e.to].push(e.from);
+                    }
+                });
+
+                // Resetare culoare noduri
+                nodes.forEach(n => nodes.update({ id: n.id, color: undefined }));
+
+                function highlight(id) {
+                    nodes.update({ id: id, color: { background: "lightgreen" } });
+                }
+
+                async function bfs(start) {
+                    const queue = [start];
+                    while (queue.length) {
+                        const current = queue.shift();
+                        if (!visited[current]) {
+                            highlight(current);
+                            visited[current] = true;
+                            await new Promise(r => setTimeout(r, 700));
+                            for (const neigh of adj[current]) {
+                                if (!visited[neigh]) queue.push(neigh);
+                            }
+                        }
+                    }
+                }
+
+                async function dfs(node) {
+                    if (visited[node]) return;
+                    highlight(node);
+                    visited[node] = true;
+                    await new Promise(r => setTimeout(r, 700));
+                    for (const neigh of adj[node]) {
+                        if (!visited[neigh]) {
+                            await dfs(neigh);
+                        }
+                    }
+                }
+
+                // Pornim de la primul nod adăugat
+                const startNode = nodes.getIds()[0];
+                if (algo === "bfs") {
+                    await bfs(startNode);
+                } else {
+                    await dfs(startNode);
+                }
+            }
+        </script>
+
+    </main>
+
+    <footer class="idk">
+        <p>&copy; 2025 Proiect Școlar - Grafuri Orientate</p>
+    </footer>
+
+    <script src="darklight.js"></script>
+
+</body>
+
+</html>
